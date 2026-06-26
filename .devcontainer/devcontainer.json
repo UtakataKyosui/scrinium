@@ -8,7 +8,8 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "bbenoist.Nix"
+                "bbenoist.Nix",
+                "visualjj.visualjj"
             ]
         }
     }
