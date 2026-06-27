@@ -21,7 +21,7 @@ ENV PATH="/home/${USERNAME}/.nix-profile/bin:${PATH}"
 RUN mkdir -p ~/.config/nix \
      && printf '%s\n' \
           'experimental-features = nix-command flakes' \
-          'substituters = https://cache.nixos.org https://nix-community.cachix.org https://rust-overlay.cachix.org' \
+          'substituters = https://cache.nixos.org https://nix-community.cachix.org' \
           'trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCUSBD4= rust-overlay.cachix.org-1:fnlXmtnCVHkn64x3JuWCRKRiKXgdPNcLgD7ICxZG8jE=' \
           'max-jobs = auto' \
           'cores = 0' \

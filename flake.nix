@@ -36,6 +36,7 @@
         fd
         ripgrep
         bat
+        atuin
 
         jq
         yq-go
@@ -53,6 +54,8 @@
 
         bacon
         nix-claude-code.packages.${system}.default
+
+        gh
       ];
     };
   };
