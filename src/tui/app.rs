@@ -1,7 +1,7 @@
 use anyhow::Result;
 use crossterm::event::{Event, KeyCode, KeyModifiers};
 use ratatui::layout::Rect;
-use std::path::PathBuf;
+use std::{collections::BTreeMap, path::PathBuf};
 
 use crate::document::Document;
 
@@ -64,12 +64,16 @@ impl App {
     }
 
     pub fn open_file(&mut self, path: PathBuf) -> Result<()> {
-        let (frontmatter, body) = match Document::from_path(&path) {
-            Ok(doc) => (doc.frontmatter, doc.body),
+        let raw = std::fs::read_to_string(&path)
+            .map_err(|e| anyhow::anyhow!("Cannot read {}: {}", path.display(), e))?;
+
+        let (frontmatter, body, extra) = match Document::from_path(&path) {
+            Ok(doc) => {
+                let extra = extract_extra_yaml_fields(&raw);
+                (doc.frontmatter, doc.body, extra)
+            }
             Err(_) => {
                 // ファイルにフロントマターがない場合は全内容を body として扱う
-                let body = std::fs::read_to_string(&path)
-                    .map_err(|e| anyhow::anyhow!("Cannot read {}: {}", path.display(), e))?;
                 let title = path
                     .file_stem()
                     .and_then(|s| s.to_str())
@@ -83,10 +87,11 @@ impl App {
                     tags: None,
                     timestamp: None,
                 };
-                (fm, body)
+                (fm, raw, BTreeMap::new())
             }
         };
-        self.fm_editor.load(&frontmatter);
+
+        self.fm_editor.load(&frontmatter, extra);
         self.md_editor.load(&body);
         self.browser.select_by_path(&path);
         self.current_file = Some(path);
@@ -105,20 +110,23 @@ impl App {
             return Ok(());
         };
 
-        let fm = self.fm_editor.to_frontmatter();
-        if fm.doc_type.trim().is_empty() {
+        if self.fm_editor.get_doc_type().trim().is_empty() {
             self.status_message = "Error: 'type' field is required".to_string();
             self.status_is_error = true;
             return Ok(());
         }
 
-        let yaml = serde_yaml::to_string(&fm)?;
+        // Auto-update timestamp to current UTC time
+        let now = chrono::Utc::now().format("%Y-%m-%dT%H:%M:%SZ").to_string();
+        self.fm_editor.set_timestamp(&now);
+
+        let yaml = self.fm_editor.to_yaml_string()?;
         let body = self.md_editor.content();
         let content = format!("---\n{yaml}---\n\n{body}");
         std::fs::write(&path, content)?;
 
         self.is_dirty = false;
-        self.status_message = "Saved".to_string();
+        self.status_message = format!("Saved at {now}");
         self.status_is_error = false;
         self.effects.trigger_save_flash(self.last_status_area);
         Ok(())
@@ -214,4 +222,37 @@ impl App {
         }
         Ok(())
     }
+}
+
+/// Extract YAML fields that are not in STANDARD_KEYS from raw file content.
+fn extract_extra_yaml_fields(content: &str) -> BTreeMap<String, serde_yaml::Value> {
+    const STANDARD_KEYS: &[&str] = &[
+        "id", "type", "title", "description", "resource", "tags", "timestamp",
+    ];
+
+    let mut extra = BTreeMap::new();
+
+    // Find frontmatter block between --- delimiters
+    let trimmed = content.trim_start();
+    if !trimmed.starts_with("---") {
+        return extra;
+    }
+    let after_open = &trimmed[3..];
+    let end = after_open.find("\n---").unwrap_or(0);
+    if end == 0 {
+        return extra;
+    }
+    let yaml_block = &after_open[..end];
+
+    if let Ok(serde_yaml::Value::Mapping(map)) = serde_yaml::from_str::<serde_yaml::Value>(yaml_block) {
+        for (k, v) in map {
+            if let serde_yaml::Value::String(key) = k {
+                if !STANDARD_KEYS.contains(&key.as_str()) {
+                    extra.insert(key, v);
+                }
+            }
+        }
+    }
+
+    extra
 }
