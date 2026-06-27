@@ -2,6 +2,7 @@ mod bundle;
 mod cli;
 mod document;
 mod graph;
+mod tui;
 mod validate;
 
 use anyhow::Result;
@@ -24,6 +25,7 @@ fn main() -> Result<()> {
         Commands::Graph { dir, format, output } => {
             cmd_graph(&dir.unwrap_or_else(|| PathBuf::from(".")), &format, output)
         }
+        Commands::Edit { file } => tui::run_editor(file),
     }
 }
 

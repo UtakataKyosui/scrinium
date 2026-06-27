@@ -42,4 +42,10 @@ pub enum Commands {
         #[arg(short, long)]
         output: Option<PathBuf>,
     },
+    /// Open the TUI editor
+    Edit {
+        /// File to open directly (omit to start in the file browser)
+        #[arg(value_name = "FILE")]
+        file: Option<PathBuf>,
+    },
 }
