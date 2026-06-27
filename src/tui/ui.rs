@@ -17,11 +17,16 @@ pub fn draw(f: &mut Frame, app: &mut App) {
 
     let outer = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Min(0), Constraint::Length(1)])
+        .constraints([
+            Constraint::Min(0),
+            Constraint::Length(1),
+            Constraint::Length(1),
+        ])
         .split(full_area);
 
     let main_area = outer[0];
     let status_area = outer[1];
+    let hints_area = outer[2];
     app.last_status_area = status_area;
 
     let h_split = Layout::default()
@@ -56,6 +61,7 @@ pub fn draw(f: &mut Frame, app: &mut App) {
     app.md_editor.render(f, md_area, focused_md);
 
     render_status_bar(f, status_area, app);
+    render_hints_bar(f, hints_area, &app.mode);
 
     // Trigger startup sweep effect only on the first rendered frame
     app.effects.trigger_startup(full_area);
@@ -88,7 +94,7 @@ fn render_status_bar(f: &mut Frame, area: Rect, app: &App) {
         String::new()
     };
 
-    let hint = format!(" Ln {}, Col {} | ^S Save  F1 Help  ^Q Quit ", row + 1, col + 1);
+    let hint = format!(" Ln {}, Col {} ", row + 1, col + 1);
     let left = format!(" {} | {}{}{}", mode_label, file_name, dirty, msg);
 
     let used = left.chars().count() + hint.chars().count();
@@ -107,6 +113,57 @@ fn render_status_bar(f: &mut Frame, area: Rect, app: &App) {
     ]);
 
     f.render_widget(Paragraph::new(line), area);
+}
+
+fn render_hints_bar(f: &mut Frame, area: Rect, mode: &AppMode) {
+    let key = |k: &str| Span::styled(format!(" {k} "), theme::label_active());
+    let sep = || Span::styled("│", Style::default().fg(theme::BRAND_BLUE));
+    let desc = |d: &str| Span::styled(format!(" {d} "), Style::default().fg(theme::FG));
+
+    let spans: Vec<Span> = match mode {
+        AppMode::Browse => vec![
+            key("Enter"), desc("開く"),
+            sep(),
+            key("j/k ↑↓"), desc("移動"),
+            sep(),
+            key("Tab"), desc("パネル切替"),
+            sep(),
+            key("Ctrl+S"), desc("保存"),
+            sep(),
+            key("Ctrl+Q"), desc("終了"),
+            sep(),
+            key("F1"), desc("ヘルプ"),
+        ],
+        AppMode::EditFrontmatter => vec![
+            key("↑↓/Enter"), desc("フィールド移動"),
+            sep(),
+            key("Tab"), desc("パネル切替"),
+            sep(),
+            key("Ctrl+S"), desc("保存"),
+            sep(),
+            key("Ctrl+Q"), desc("終了"),
+            sep(),
+            key("F1"), desc("ヘルプ"),
+        ],
+        AppMode::EditMarkdown => vec![
+            key("Tab"), desc("パネル切替"),
+            sep(),
+            key("Ctrl+S"), desc("保存"),
+            sep(),
+            key("Ctrl+Q"), desc("終了"),
+            sep(),
+            key("F1"), desc("ヘルプ"),
+        ],
+        AppMode::HelpPopup => vec![
+            key("F1 / Esc / Any"), desc("ヘルプを閉じる"),
+        ],
+    };
+
+    let line = Line::from(spans);
+    f.render_widget(
+        Paragraph::new(line).style(Style::default().bg(Color::Black)),
+        area,
+    );
 }
 
 fn render_help_popup(f: &mut Frame, area: Rect) {

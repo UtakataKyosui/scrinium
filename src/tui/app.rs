@@ -64,9 +64,30 @@ impl App {
     }
 
     pub fn open_file(&mut self, path: PathBuf) -> Result<()> {
-        let doc = Document::from_path(&path)?;
-        self.fm_editor.load(&doc.frontmatter);
-        self.md_editor.load(&doc.body);
+        let (frontmatter, body) = match Document::from_path(&path) {
+            Ok(doc) => (doc.frontmatter, doc.body),
+            Err(_) => {
+                // ファイルにフロントマターがない場合は全内容を body として扱う
+                let body = std::fs::read_to_string(&path)
+                    .map_err(|e| anyhow::anyhow!("Cannot read {}: {}", path.display(), e))?;
+                let title = path
+                    .file_stem()
+                    .and_then(|s| s.to_str())
+                    .map(|s| s.to_string());
+                let fm = crate::document::Frontmatter {
+                    id: None,
+                    doc_type: String::new(),
+                    title,
+                    description: None,
+                    resource: None,
+                    tags: None,
+                    timestamp: None,
+                };
+                (fm, body)
+            }
+        };
+        self.fm_editor.load(&frontmatter);
+        self.md_editor.load(&body);
         self.browser.select_by_path(&path);
         self.current_file = Some(path);
         self.is_dirty = false;
