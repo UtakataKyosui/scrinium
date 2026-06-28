@@ -2,14 +2,14 @@
 
 All notable changes to scrinium are documented in this file.
 
-## [1.0.0] - 2026-06-27
+## [1.0.0] - 2026-06-28
 
 ### Bug Fixes
-- **scrinium**: YAML Frontmatterがない場合のFallbackと操作方法を常時表示を実装
+- **archivum**: YAML Frontmatterがない場合のFallbackと操作方法を常時表示を実装
 
-- **scrinium**: 引数の取り方がユーザからは使いづらそうだったので、--typeのような ハイフン2つとプロパティ名で明示指定するように修正
+- **archivum**: 引数の取り方がユーザからは使いづらそうだったので、--typeのような ハイフン2つとプロパティ名で明示指定するように修正
 
-- **scrinium**: .claude配下がvalidateの走査対象に入らないように修正
+- **archivum**: .claude配下がvalidateの走査対象に入らないように修正
 
 
 ### Build System
@@ -28,8 +28,16 @@ All notable changes to scrinium are documented in this file.
 - **devcotainer**: Claude Code Sonnetに直してもらった
 
 
+### CI/CD
+- **check & release**: CHANGELOG作成のためのCIを作成
+
+- **release**: リリースの失敗があったので修正 + archivumという名前がすでに使用されていたので修正
+
+
 ### Documentation
 - **gh-wheel**: Gh-wheelの追加とClaude CodeのAgent SKillの追加
+
+- **readme**: READMEを更新
 
 
 ### Features
@@ -37,11 +45,11 @@ All notable changes to scrinium are documented in this file.
 
 - **parse**: YAMLフロントマターをパースするプログラムの作成開始、まずは、依存関係のパッケージを（fronma）を導入、サンプルをコピー
 
-- **scrinium**: CLI部分を作成
+- **archivum**: CLI部分を作成
 
-- **scrinium**: TUIとしての実装を追加
+- **archivum**: TUIとしての実装を追加
 
-- **scrinium**: Open Knowledge Formatの仕様に合わせて、YAML Frontmatterのプロパティ拡張への対応と、更新時に自動的にtimestampを更新するように実装
+- **archivum**: Open Knowledge Formatの仕様に合わせて、YAML Frontmatterのプロパティ拡張への対応と、更新時に自動的にtimestampを更新するように実装
 
 
 ### Miscellaneous
@@ -51,5 +59,5 @@ All notable changes to scrinium are documented in this file.
 
 
 ### Testing
-- **scrinium**: テストを追加
+- **archivum**: テストを追加
 
