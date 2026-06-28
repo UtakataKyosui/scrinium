@@ -5,7 +5,12 @@
       "Bash(cargo build *)",
       "Bash(cargo run *)",
       "Bash(cargo add *)",
-      "Bash(cargo test *)"
+      "Bash(cargo test *)",
+      "Bash(cargo check *)",
+      "Bash(jj *)"
+    ],
+    "ask": [
+      "Bash(jj git push *)"
     ]
   },
   "hooks": {

@@ -1,4 +1,4 @@
-use archivum::validate::{ValidationResult, validate_path};
+use scrinium::validate::{ValidationResult, validate_path};
 use std::fs;
 use tempfile::TempDir;
 

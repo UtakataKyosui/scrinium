@@ -2,7 +2,7 @@ use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
 #[derive(Parser)]
-#[command(name = "archivum", about = "OKF (Open Knowledge Format) CLI")]
+#[command(name = "scrinium", about = "OKF (Open Knowledge Format) CLI")]
 pub struct Cli {
     #[command(subcommand)]
     pub command: Commands,

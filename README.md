@@ -1,10 +1,10 @@
-# archivum
+# scrinium
 
-[![Crates.io](https://img.shields.io/crates/v/archivum)](https://crates.io/crates/archivum)
-[![CI](https://github.com/UtakataKyosui/archivum/actions/workflows/ci.yml/badge.svg)](https://github.com/UtakataKyosui/archivum/actions/workflows/ci.yml)
+[![Crates.io](https://img.shields.io/crates/v/scrinium)](https://crates.io/crates/scrinium)
+[![CI](https://github.com/UtakataKyosui/scrinium/actions/workflows/ci.yml/badge.svg)](https://github.com/UtakataKyosui/scrinium/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A CLI and TUI editor for managing [Open Knowledge Format (OKF)](https://github.com/UtakataKyosui/archivum) Markdown knowledge graphs.
+A CLI and TUI editor for managing [Open Knowledge Format (OKF)](https://github.com/UtakataKyosui/scrinium) Markdown knowledge graphs.
 
 OKF準拠のMarkdownドキュメントを作成・検証・バンドル・可視化するCLI/TUIツールです。
 
@@ -25,14 +25,14 @@ OKF準拠のMarkdownドキュメントを作成・検証・バンドル・可視
 ### From crates.io
 
 ```sh
-cargo install archivum
+cargo install scrinium
 ```
 
 ### From source
 
 ```sh
-git clone https://github.com/UtakataKyosui/archivum
-cd archivum
+git clone https://github.com/UtakataKyosui/scrinium
+cd scrinium
 cargo install --path .
 ```
 
@@ -42,20 +42,20 @@ cargo install --path .
 
 ```sh
 # Create a new OKF document
-archivum create -T Concept --title "Rust Ownership"
+scrinium create -T Concept --title "Rust Ownership"
 
 # Validate all documents in the current directory
-archivum validate
+scrinium validate
 
 # Open the TUI editor
-archivum edit
+scrinium edit
 ```
 
 ---
 
 ## CLI Reference
 
-### `archivum create`
+### `scrinium create`
 
 Creates a new OKF Markdown document with a UUID and timestamp.
 
@@ -66,11 +66,11 @@ Creates a new OKF Markdown document with a UUID and timestamp.
 | `--output <PATH>` | `-o` | Output file path (default: `<slugified-title>.md`) |
 
 ```sh
-archivum create -T Concept --title "My Concept"
+scrinium create -T Concept --title "My Concept"
 # → Creates my-concept.md with auto-generated id and timestamp
 ```
 
-### `archivum validate`
+### `scrinium validate`
 
 Validates OKF frontmatter compliance for a file or directory. Hidden directories (`.claude`, `.git`, etc.) are automatically excluded.
 
@@ -78,7 +78,7 @@ Validates OKF frontmatter compliance for a file or directory. Hidden directories
 |---|---|---|
 | `--path <PATH>` | `-p` | File or directory to validate (default: `.`) |
 
-### `archivum bundle`
+### `scrinium bundle`
 
 Generates or updates `index.md` (document catalog) and `log.md` (activity log) for a knowledge bundle directory.
 
@@ -86,7 +86,7 @@ Generates or updates `index.md` (document catalog) and `log.md` (activity log) f
 |---|---|---|
 | `--dir <DIR>` | `-d` | Bundle directory (default: `.`) |
 
-### `archivum graph`
+### `scrinium graph`
 
 Exports the knowledge graph. Documents are nodes; `[[wikilink]]` references in the Markdown body become edges.
 
@@ -97,10 +97,10 @@ Exports the knowledge graph. Documents are nodes; `[[wikilink]]` references in t
 | `--output <PATH>` | `-o` | Output file (default: `graph.<format>`) |
 
 ```sh
-archivum graph --format png --output knowledge.png
+scrinium graph --format png --output knowledge.png
 ```
 
-### `archivum edit`
+### `scrinium edit`
 
 Opens the TUI editor.
 
@@ -181,7 +181,7 @@ Bug reports, feature requests, and pull requests are welcome.
 
 1. Fork the repository
 2. Create a branch: `git checkout -b feat/your-feature`
-3. Commit using conventional commits: `feat(archivum): add X`
+3. Commit using conventional commits: `feat(scrinium): add X`
 4. Push and open a pull request
 
 Before submitting, make sure the following pass:

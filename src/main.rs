@@ -2,7 +2,7 @@ mod cli;
 mod tui;
 
 use anyhow::Result;
-use archivum::{bundle, document, graph, validate};
+use scrinium::{bundle, document, graph, validate};
 use chrono::Utc;
 use clap::Parser;
 use cli::{Cli, Commands};

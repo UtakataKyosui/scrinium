@@ -1,4 +1,4 @@
-use archivum::bundle::Bundle;
+use scrinium::bundle::Bundle;
 use std::fs;
 use tempfile::TempDir;
 

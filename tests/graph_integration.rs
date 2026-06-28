@@ -1,5 +1,5 @@
-use archivum::bundle::Bundle;
-use archivum::graph::GraphData;
+use scrinium::bundle::Bundle;
+use scrinium::graph::GraphData;
 use std::fs;
 use tempfile::TempDir;
 

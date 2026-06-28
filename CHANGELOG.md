@@ -1,15 +1,15 @@
 # Changelog
 
-All notable changes to archivum are documented in this file.
+All notable changes to scrinium are documented in this file.
 
 ## [1.0.0] - 2026-06-27
 
 ### Bug Fixes
-- **archivum**: YAML Frontmatterがない場合のFallbackと操作方法を常時表示を実装
+- **scrinium**: YAML Frontmatterがない場合のFallbackと操作方法を常時表示を実装
 
-- **archivum**: 引数の取り方がユーザからは使いづらそうだったので、--typeのような ハイフン2つとプロパティ名で明示指定するように修正
+- **scrinium**: 引数の取り方がユーザからは使いづらそうだったので、--typeのような ハイフン2つとプロパティ名で明示指定するように修正
 
-- **archivum**: .claude配下がvalidateの走査対象に入らないように修正
+- **scrinium**: .claude配下がvalidateの走査対象に入らないように修正
 
 
 ### Build System
@@ -37,11 +37,11 @@ All notable changes to archivum are documented in this file.
 
 - **parse**: YAMLフロントマターをパースするプログラムの作成開始、まずは、依存関係のパッケージを（fronma）を導入、サンプルをコピー
 
-- **archivum**: CLI部分を作成
+- **scrinium**: CLI部分を作成
 
-- **archivum**: TUIとしての実装を追加
+- **scrinium**: TUIとしての実装を追加
 
-- **archivum**: Open Knowledge Formatの仕様に合わせて、YAML Frontmatterのプロパティ拡張への対応と、更新時に自動的にtimestampを更新するように実装
+- **scrinium**: Open Knowledge Formatの仕様に合わせて、YAML Frontmatterのプロパティ拡張への対応と、更新時に自動的にtimestampを更新するように実装
 
 
 ### Miscellaneous
@@ -51,5 +51,5 @@ All notable changes to archivum are documented in this file.
 
 
 ### Testing
-- **archivum**: テストを追加
+- **scrinium**: テストを追加
 

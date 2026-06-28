@@ -1,20 +1,20 @@
 [package]
-name = "archivum"
+name = "scrinium"
 version = "1.0.0"
 edition = "2024"
 description = "OKF (Open Knowledge Format) CLI — create, validate, bundle and visualize Markdown knowledge graphs with a TUI editor"
 license = "MIT"
-repository = "https://github.com/UtakataKyosui/archivum"
+repository = "https://github.com/UtakataKyosui/scrinium"
 keywords = ["markdown", "knowledge-graph", "cli", "tui", "okf"]
 categories = ["command-line-utilities", "text-processing"]
 readme = "README.md"
 
 [lib]
-name = "archivum"
+name = "scrinium"
 path = "src/lib.rs"
 
 [[bin]]
-name = "archivum"
+name = "scrinium"
 path = "src/main.rs"
 
 [dependencies]
