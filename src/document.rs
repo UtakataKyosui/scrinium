@@ -1,6 +1,16 @@
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
+pub const STANDARD_KEYS: &[&str] = &[
+    "id",
+    "type",
+    "title",
+    "description",
+    "resource",
+    "tags",
+    "timestamp",
+];
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Frontmatter {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -57,6 +67,23 @@ impl Document {
     pub fn is_log(&self) -> bool {
         self.filename() == "log.md"
     }
+
+    pub fn display_title(&self) -> String {
+        self.frontmatter
+            .title
+            .clone()
+            .unwrap_or_else(|| self.filename().to_string())
+    }
+}
+
+/// Returns the YAML text between the opening and closing `---` markers.
+pub fn frontmatter_yaml_block(content: &str) -> Option<&str> {
+    if !content.starts_with("---") {
+        return None;
+    }
+    let after = &content[3..];
+    let end = after.find("\n---")?;
+    Some(&after[..end])
 }
 
 /// Returns the byte offset just after the closing `---\n` of the YAML frontmatter.

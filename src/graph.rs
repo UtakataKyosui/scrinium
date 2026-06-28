@@ -52,11 +52,7 @@ impl GraphData {
             let r = (WIDTH.min(HEIGHT) * 0.38).max(1.0);
             nodes.push(GraphNode {
                 id,
-                title: doc
-                    .frontmatter
-                    .title
-                    .clone()
-                    .unwrap_or_else(|| doc.filename().to_string()),
+                title: doc.display_title(),
                 doc_type: doc.frontmatter.doc_type.clone(),
                 path: path_str,
                 x: WIDTH / 2.0 + r * angle.cos(),

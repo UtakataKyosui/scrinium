@@ -1,4 +1,4 @@
-use crate::document::Frontmatter;
+use crate::document::{Frontmatter, STANDARD_KEYS};
 use crossterm::event::{Event, KeyCode, KeyModifiers};
 use ratatui::{
     Frame,
@@ -11,16 +11,6 @@ use std::collections::BTreeMap;
 use tui_textarea::TextArea;
 
 use super::theme;
-
-const STANDARD_KEYS: &[&str] = &[
-    "id",
-    "type",
-    "title",
-    "description",
-    "resource",
-    "tags",
-    "timestamp",
-];
 
 // Display labels for standard fields (right-aligned in 12 chars)
 const FIELD_LABELS: &[&str] = &[

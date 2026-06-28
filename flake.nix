@@ -46,6 +46,7 @@
         bat
         atuin
         rm-improved
+        tokei
 
         python3
 
@@ -67,6 +68,7 @@
         nix-claude-code.packages.${system}.default
 
         gh
+        ast-grep
       ];
     };
   };

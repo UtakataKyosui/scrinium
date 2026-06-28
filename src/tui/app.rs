@@ -3,7 +3,7 @@ use crossterm::event::{Event, KeyCode, KeyModifiers};
 use ratatui::layout::Rect;
 use std::{collections::BTreeMap, path::PathBuf};
 
-use crate::document::Document;
+use crate::document::{Document, STANDARD_KEYS, frontmatter_yaml_block};
 
 use super::{
     browser::FileBrowser, editor::MarkdownEditor, effects::Effects, frontmatter::FrontmatterEditor,
@@ -230,29 +230,11 @@ impl App {
 
 /// Extract YAML fields that are not in STANDARD_KEYS from raw file content.
 fn extract_extra_yaml_fields(content: &str) -> BTreeMap<String, serde_yaml::Value> {
-    const STANDARD_KEYS: &[&str] = &[
-        "id",
-        "type",
-        "title",
-        "description",
-        "resource",
-        "tags",
-        "timestamp",
-    ];
-
     let mut extra = BTreeMap::new();
 
-    // Find frontmatter block between --- delimiters
-    let trimmed = content.trim_start();
-    if !trimmed.starts_with("---") {
+    let Some(yaml_block) = frontmatter_yaml_block(content) else {
         return extra;
-    }
-    let after_open = &trimmed[3..];
-    let end = after_open.find("\n---").unwrap_or(0);
-    if end == 0 {
-        return extra;
-    }
-    let yaml_block = &after_open[..end];
+    };
 
     if let Ok(serde_yaml::Value::Mapping(map)) =
         serde_yaml::from_str::<serde_yaml::Value>(yaml_block)

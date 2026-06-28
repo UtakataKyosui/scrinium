@@ -7,6 +7,7 @@ use ratatui::{
 use std::path::{Path, PathBuf};
 
 use super::theme;
+use scrinium::is_markdown;
 
 pub struct FileBrowser {
     pub entries: Vec<PathBuf>,
@@ -29,7 +30,7 @@ impl FileBrowser {
         let mut entries: Vec<PathBuf> = std::fs::read_dir(&self.dir)?
             .filter_map(|e| e.ok())
             .map(|e| e.path())
-            .filter(|p| p.extension().is_some_and(|x| x == "md"))
+            .filter(|p| is_markdown(p))
             .collect();
         entries.sort();
         self.entries = entries;
