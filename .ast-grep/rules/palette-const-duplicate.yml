@@ -1,0 +1,15 @@
+id: palette-const-duplicate
+language: Rust
+severity: warning
+message: >-
+  PALETTE constant defined inside a function body — extract to module level
+  to avoid defining the same colors in both to_svg() and to_png().
+note: >-
+  graph.rs defines PALETTE twice with different types (&[&str] for SVG, &[[u8;3]] for PNG).
+  Consider extracting both to module-level constants.
+rule:
+  all:
+    - pattern: "const PALETTE: $T = &[$$$];"
+    - inside:
+        kind: function_item
+        stopBy: end

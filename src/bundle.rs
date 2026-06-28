@@ -1,7 +1,6 @@
 use crate::document::Document;
 use anyhow::Result;
 use std::path::{Path, PathBuf};
-use walkdir::WalkDir;
 
 pub struct Bundle {
     pub root: PathBuf,
@@ -11,19 +10,7 @@ pub struct Bundle {
 impl Bundle {
     pub fn load(dir: &Path) -> Result<Self> {
         let mut documents = Vec::new();
-        for entry in WalkDir::new(dir)
-            .follow_links(false)
-            .into_iter()
-            .filter_entry(|e| {
-                e.depth() == 0
-                    || e.file_name()
-                        .to_str()
-                        .map(|s| !s.starts_with('.'))
-                        .unwrap_or(true)
-            })
-            .filter_map(|e| e.ok())
-            .filter(|e| e.path().extension().is_some_and(|ext| ext == "md"))
-        {
+        for entry in crate::markdown_files(dir) {
             match Document::from_path(entry.path()) {
                 Ok(doc) => documents.push(doc),
                 Err(e) => eprintln!("Warning: {e}"),

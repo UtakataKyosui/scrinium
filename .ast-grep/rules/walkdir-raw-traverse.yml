@@ -1,0 +1,11 @@
+id: walkdir-raw-traverse
+language: Rust
+severity: error
+message: >-
+  Raw WalkDir traversal duplicates the markdown_files() helper in lib.rs.
+  Use `crate::markdown_files(dir)` instead.
+note: >-
+  `pub fn markdown_files(dir: &std::path::Path) -> impl Iterator<Item = walkdir::DirEntry>`
+  is defined in src/lib.rs and encapsulates this exact traversal.
+rule:
+  pattern: "WalkDir::new($DIR).follow_links(false).into_iter()"

@@ -1,0 +1,17 @@
+id: type-color-map
+language: Rust
+severity: warning
+message: >-
+  Type-to-color mapping rebuilt inline — this loop appears identically in both
+  to_svg() and to_png(). Extract to a shared method on GraphData.
+note: >-
+  Consider: fn type_color_indices(nodes: &[GraphNode]) -> HashMap<&str, usize>
+  The SVG variant can map index → hex string from a module-level const slice.
+rule:
+  pattern: |
+    for $NODE in &self.nodes {
+      if !$MAP.contains_key($NODE.doc_type.as_str()) {
+        $MAP.insert($$$);
+        ci += 1;
+      }
+    }

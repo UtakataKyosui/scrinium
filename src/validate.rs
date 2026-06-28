@@ -1,7 +1,6 @@
 use crate::document::Document;
 use anyhow::Result;
 use std::path::Path;
-use walkdir::WalkDir;
 
 pub enum ValidationResult {
     Pass(String),
@@ -14,19 +13,7 @@ pub fn validate_path(path: &Path) -> Result<Vec<ValidationResult>> {
     if path.is_file() {
         results.push(validate_file(path));
     } else {
-        for entry in WalkDir::new(path)
-            .follow_links(false)
-            .into_iter()
-            .filter_entry(|e| {
-                e.depth() == 0
-                    || e.file_name()
-                        .to_str()
-                        .map(|s| !s.starts_with('.'))
-                        .unwrap_or(true)
-            })
-            .filter_map(|e| e.ok())
-            .filter(|e| e.path().extension().is_some_and(|ext| ext == "md"))
-        {
+        for entry in crate::markdown_files(path) {
             results.push(validate_file(entry.path()));
         }
     }
