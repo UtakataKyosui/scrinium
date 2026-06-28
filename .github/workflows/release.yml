@@ -9,8 +9,67 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  publish:
+  ci:
+    name: Lint, Format & Test
+    uses: ./.github/workflows/ci.yml
+
+  changelog:
+    name: Generate Changelog
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      release_notes: ${{ steps.cliff-current.outputs.content }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate full CHANGELOG.md
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --verbose
+        env:
+          OUTPUT: CHANGELOG.md
+          GITHUB_REPO: ${{ github.repository }}
+
+      - name: Capture release notes for ${{ github.ref_name }}
+        id: cliff-current
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --latest --strip all
+        env:
+          GITHUB_REPO: ${{ github.repository }}
+
+      - name: Commit CHANGELOG.md to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git diff --staged --quiet || \
+            git commit -m "chore(release): update CHANGELOG.md for ${{ github.ref_name }}"
+          git push origin main
+
+  github-release:
+    name: Create GitHub Release
+    needs: changelog
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          body: ${{ needs.changelog.outputs.release_notes }}
+
+  publish-crates:
     name: Publish to crates.io
+    needs: changelog
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
