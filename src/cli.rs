@@ -48,8 +48,7 @@ pub enum Commands {
     },
     /// Open the TUI editor
     Edit {
-        /// File to open directly (omit to start in the file browser)
-        #[arg(short, long, value_name = "FILE")]
-        file: Option<PathBuf>,
+        /// File or directory to open (defaults to current directory)
+        path: Option<PathBuf>,
     },
 }

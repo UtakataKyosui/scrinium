@@ -34,11 +34,16 @@ pub struct App {
 }
 
 impl App {
-    pub fn new(initial_file: Option<PathBuf>) -> Result<Self> {
-        let dir = initial_file
-            .as_ref()
-            .and_then(|p| p.parent().map(|d| d.to_path_buf()))
-            .unwrap_or_else(|| std::env::current_dir().unwrap_or_default());
+    pub fn new(path: Option<PathBuf>) -> Result<Self> {
+        let cwd = std::env::current_dir().unwrap_or_default();
+        let (dir, initial_file) = match path {
+            None => (cwd, None),
+            Some(p) if p.is_dir() => (p, None),
+            Some(p) => {
+                let dir = p.parent().map(|d| d.to_path_buf()).unwrap_or(cwd);
+                (dir, Some(p))
+            }
+        };
 
         let mut app = Self {
             mode: AppMode::Browse,
@@ -56,8 +61,8 @@ impl App {
             last_status_area: Rect::default(),
         };
 
-        if let Some(path) = initial_file {
-            app.open_file(path)?;
+        if let Some(file) = initial_file {
+            app.open_file(file)?;
         }
         Ok(app)
     }

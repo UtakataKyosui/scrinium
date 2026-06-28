@@ -24,7 +24,7 @@ fn main() -> Result<()> {
             format,
             output,
         } => cmd_graph(&dir.unwrap_or_else(|| PathBuf::from(".")), &format, output),
-        Commands::Edit { file } => tui::run_editor(file),
+        Commands::Edit { path } => tui::run_editor(path),
     }
 }
 
